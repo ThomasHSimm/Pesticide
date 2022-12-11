@@ -32,10 +32,10 @@ def load_data(ii):
     return df2
 
 data_load_state = st.text('Loading data...')
-df2=load_data(0)
+df2=load_data(2)
 data_load_state.text("Loaded data (using st.cache)")
 
-df2
+st.dataframe(df2.head())
 
 # An optionbox- Select Product
 products = df2['product'].unique()
@@ -85,5 +85,5 @@ GROUP BY
 data_sql
 
 
-fig = plot_pie_by_chem(data_sql, chemical_country='all', what_to_plot='sum_detected',is_country=is_country)
+fig = plot_pie_by_chem(data_sql, chemical_country='all', what_to_plot='sum_detected',is_country=is_country, product=product)
 st.pyplot(fig)

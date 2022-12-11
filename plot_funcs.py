@@ -2,15 +2,15 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-def plot_pie_by_chem(data_sql, chemical_country='boscalid', what_to_plot='sum_detected',is_country=True):
+def plot_pie_by_chem(data_sql, chemical_country='boscalid', what_to_plot='sum_detected',is_country=True,product='all'):
 
     if is_country:
         label_plot ='country_of_origin'
-        title_str = what_to_plot + ' by chemical = ' + chemical_country
+        title_str = product + '. ' + what_to_plot + ' by chemical = ' + chemical_country
         selective = 'chem_name'
     else:
         label_plot = 'chem_name'
-        title_str = what_to_plot + ' from country = ' + chemical_country
+        title_str = product + '. ' + what_to_plot + ' from country = ' + chemical_country
         selective = 'country_of_origin'
 
     if chemical_country =='all':
