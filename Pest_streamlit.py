@@ -35,6 +35,8 @@ data_load_state = st.text('Loading data...')
 df2=load_data(0)
 data_load_state.text("Loaded data (using st.cache)")
 
+df2
+
 # An optionbox- Select Product
 products = df2['product'].unique()
 product = st.sidebar.selectbox(
