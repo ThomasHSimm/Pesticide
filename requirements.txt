@@ -1,0 +1,5 @@
+ezodf
+re
+seaborn
+matplotlib
+numpy
