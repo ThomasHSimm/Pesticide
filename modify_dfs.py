@@ -15,14 +15,34 @@ def modify_df(df):
     # rename cols
     df = rename_cols(df)
     
+    # remove rows that are just headers i.e. 1st column not of form 898908/809809 here just checks if 1st value is numeric
+    df = df.loc[df.iloc[:,0].apply(lambda x: x if x[0].isnumeric() else 0)!=0]
+    
     # get postcodes
     df['address_postcode']=df['address'].apply(extract_pcode)
-    df['packer__postcode']=df['packer_/_manufacturer_/_importer'].apply(extract_pcode)
+    
+    try:
+        df['packer__postcode']=df['packer_/_manufacturer_/_importer'].apply(extract_pcode)
+    except:
+        pass
+    try:
+        df['packer__postcode']=df['packer_/_manufacturer'].apply(extract_pcode)
+    except:
+        pass
                        
     # get pesticide residue    
-    df2 = extract_pesticide(df)                      
+    df2 = extract_pesticide(df)
     df2.reset_index(inplace=True,drop=True)
     df = df.join(df2)
+    
+    # modify product name
+    df['product']  = df['product'].apply(lambda x: re.sub(r'_BNA','',x) )
+    
+    # change data type of columns
+    df['date_of_sampling'] = pd.to_datetime(df['date_of_sampling'])
+    
+    df['amount_detected'] = df['amount_detected'].astype('float64')
+    df['mrl'] = df['mrl'].astype('float64')
                        
     return df
      

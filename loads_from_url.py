@@ -1,5 +1,6 @@
 import pandas as pd
 import ezodf
+import re
 
 def import_ods(fname):
     """
@@ -14,20 +15,30 @@ def import_ods(fname):
     """
     doc = ezodf.opendoc(fname)
     for i, sheet in enumerate(doc.sheets):
-        if i!=0: #ignore 1st sheet
-            product = sheet.name
-            print(product)
+        product = sheet.name
+#         print(product)
+        if product != 'Introduction' and product != 'Summary' and not re.search(r"SUM",product): #ignore 1st sheet
             
-            df_new =import_ods_inner(sheet)
-            df_new.columns = df_new.columns.str.strip()
-            try:
-                df = pd.concat([df,df_new])
-            except:
-                df = df_new
+            # main call
+            df_new, bool_sheet = import_ods_inner(sheet)
             
-            df.reset_index(inplace=True,drop=True)    
+            # if sheet is not a bad sheet
+            if bool_sheet == True:
+                df_new['product'] = product
+                df_new.columns = df_new.columns.str.strip()
+                try:
+                    if len(df_new.columns)>3:
+                        df = pd.concat([df,df_new])
+                    else:
+                        print(f"{product} not enough columns")
+                except:
+                    df = df_new
+
+                df.reset_index(inplace=True,drop=True)    
     return df
             
+
+
 def import_ods_inner(sheet):
     """
     inner function of import_ods
@@ -37,35 +48,39 @@ def import_ods_inner(sheet):
         sheet (sheet from ezodf): a sheet of the ods file
     
     Returns:
-        a dataframe of the sheet
+        a dataframe of the sheet 
+        and a boolean of if the sheet is not correct 
     """
-    df_dict = {}
-    for i, row in enumerate(sheet.rows()):
-    # row is a list of cells
-    # assume the header is on the first row
-        if i == 1:
-        # columns as lists in a dictionary
-            df_dict = {cell.value:[] for cell in row}
-
-    # create index for the column headers
-    for i,row in enumerate(sheet.rows()):
-        if i == 0:
-            continue
-        elif i == 1:
-            col_index = [cell.value for cell in row]
-            continue
-        for j,cell in enumerate(row):
-            df_dict[col_index[j]].append(cell.value)
-            
-    # delete none column
-    try:
-        del df_dict[None]
-    except:
-        pass
-    # and convert to a DataFrame
-    df = pd.DataFrame(df_dict)
     
-    # fill based on previous values    
-    df.fillna(method='ffill', inplace=True)
+    data_sheet = []
+    got_colname =False
+    for i,row in enumerate(sheet.rows()):
 
-    return df
+        if got_colname == False:
+            column_names = [cell.value for cell in row]
+
+            if column_names[0] == 'Sample ID':
+                got_colname = True
+                     
+        else:
+            data_sheet.append( [cell.value for cell in row] )
+            
+    
+    if got_colname:
+        ddf = pd.DataFrame(data_sheet)
+
+        ddf.columns = column_names
+
+        # delete none column
+        try:
+            del ddf[None]
+        except:
+            pass
+
+
+        # fill based on previous values    
+        ddf.fillna(method='ffill', inplace=True)
+
+        return ddf,True
+    else:
+        return [],False
