@@ -38,6 +38,9 @@ def modify_df(df):
     # modify product name
     df['product']  = df['product'].apply(lambda x: re.sub(r'_BNA','',x) )
     
+    # modify date
+    # df2['date_of_sampling'].dt.day
+
     # change data type of columns
     df['date_of_sampling'] = pd.to_datetime(df['date_of_sampling'])
     
