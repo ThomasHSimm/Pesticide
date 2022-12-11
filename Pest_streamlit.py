@@ -64,8 +64,8 @@ else:
         )
 
 # product = 'Wine'
-date_low = '2016-06-01'
-date_high = '2017-06-01'
+date_low = '2010-06-01'
+date_high = '2027-06-01'
 data_sql = sqldf(f"""
 SELECT 
     chem_name,	SUM(amount_detected) AS sum_detected, 
@@ -85,5 +85,5 @@ GROUP BY
 data_sql
 
 
-# fig = plot_pie_by_chem(data_sql, chemical_country='all', what_to_plot='sum_detected',is_country=is_country)
-# st.pyplot(fig)
+fig = plot_pie_by_chem(data_sql, chemical_country='all', what_to_plot='sum_detected',is_country=is_country)
+st.pyplot(fig)
