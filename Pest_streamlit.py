@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import ezodf
+
 
 from loads_from_url import *
 from modify_dfs import *
@@ -83,5 +83,5 @@ GROUP BY
 data_sql
 
 
-fig = plot_pie_by_chem(data_sql, chemical_country='all', what_to_plot='sum_detected',is_country=is_country)
-st.pyplot(fig)
+# fig = plot_pie_by_chem(data_sql, chemical_country='all', what_to_plot='sum_detected',is_country=is_country)
+# st.pyplot(fig)
