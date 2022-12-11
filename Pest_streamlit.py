@@ -85,5 +85,5 @@ GROUP BY
 data_sql
 
 
-fig = plot_pie_by_chem(data_sql, chemical_country='all', what_to_plot='sum_detected',is_country=is_country, product=product)
+fig = plot_pie_by_chem(data_sql, chemical_country=chemical_country, what_to_plot='sum_detected',is_country=is_country, product=product)
 st.pyplot(fig)
