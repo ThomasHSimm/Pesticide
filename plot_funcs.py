@@ -22,6 +22,10 @@ def plot_pie_by_chem(data_sql, chemical_country='boscalid', what_to_plot='sum_de
         data = data_sql.loc[data_sql[selective]==chemical_country,what_to_plot]
         labels = data_sql.loc[data_sql[selective]==chemical_country,label_plot]
     
+    useme = data != 0
+    data = data[useme]
+    labels = labels[useme]
+
     #define Seaborn color palette to use
     colors = sns.color_palette('pastel')[0:len(labels)]
     fig=plt.figure(figsize=(7,7))
