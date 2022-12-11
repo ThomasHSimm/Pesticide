@@ -1,5 +1,6 @@
 ezodf
 lxml
+pandasql
 seaborn
 matplotlib
 numpy
