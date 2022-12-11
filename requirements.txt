@@ -1,4 +1,5 @@
 ezodf
+lxml
 seaborn
 matplotlib
 numpy
