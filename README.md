@@ -9,10 +9,31 @@ https://github.com/james-westwood/govt_pesticide_test_data_downloader
 # Aims
 
 - Produce a downloader to download ods files and convert to a more useable df format
-- Some plots 
+- Plots and display data
 - Combine in a streamlit app
 
 # Current output
+
+- a workable downloader using beautifulsoup exists but how to incoporate in the app not established
+  - would like: button on app that downloads new ods files to the github repo
+  - why: dowloading the files each time on streamlit is not userfriendly
+  - workaround: download files not in the data folder? 
+- ods to dataframe:
+  - each ods file has a different format. Some basic workarounds given format of ones looked at used
+  - either create in one big df in app or group by year and maybe extract other info seperately
+  - work as a df somewhere to access by SQL etc?
+- dataframe processing
+  - done by a combination of pandas and pandas-SQL
+  - + understanding of data needed for more coherent processing
+- plots
+  - (see above) business case needs exploring
+  - choice of plot type
+  - legend away from pie- looks a mess when lots of elements
+- streamlit app
+  - maybe a plot with time too
+  - df plots crash local pc for df2 if don't put head()
+    - maybe more refined display based on criteria of data?
+  - add count part to plots
 
 https://thomashsimm-pesticide-pest-streamlit-udsgv3.streamlit.app/
 
