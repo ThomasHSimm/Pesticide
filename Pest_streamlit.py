@@ -1,16 +1,15 @@
 import streamlit as st
 import pandas as pd
 
-
-from loads_from_url import *
-from modify_dfs import *
-from plot_funcs import *
+from src.data_loading.loads_from_url import *
+from src.data_cleaning.modify_dfs import *
+from src.data_visualisation.plot_funcs import *
 
 import os
 from pandasql import sqldf
 cwd = os.getcwd()
 
-folder_path = os.path.join(cwd,'data_files')
+folder_path = os.path.join(cwd,'data')
 # folder_path = 'C:\\Users\simmt\Code1\Pesticide\Pesticide-main\data_files'
 file_path = []
 for x in os.listdir(folder_path):
