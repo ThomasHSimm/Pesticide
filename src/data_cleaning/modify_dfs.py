@@ -46,6 +46,11 @@ def modify_df(df):
     
     df['amount_detected'] = df['amount_detected'].astype('float64')
     df['mrl'] = df['mrl'].astype('float64')
+    
+    # add a new column
+    df['amount_pc']=df['amount_detected']/df2['mrl']
+
+    df.loc[df['amount_pc'].isna(),['amount_pc']]=0
                        
     return df
      
