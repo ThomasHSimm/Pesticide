@@ -48,11 +48,12 @@ def modify_df(df):
     df['mrl'] = df['mrl'].astype('float64')
     
     # add a new column
-    df['amount_pc']=df['amount_detected']/df2['mrl']
+    df['amount_pc']=df['amount_detected']/df['mrl']
 
     df.loc[df['amount_pc'].isna(),['amount_pc']]=0
                        
     return df
+
      
 def extract_pcode(x):    
     regexp = r'([A-Za-z]+[0-9]+\s[0-9]+[A-Za-z]+$)'
@@ -88,3 +89,51 @@ def rename_cols(df):
     df = df.loc[df['sample_id'].str.contains(r'^[0-9]')]
     df.reset_index(inplace=True,drop=True) 
     return df
+
+def groupby_id_and_q(df2: pd.DataFrame,
+                     col_groupby: str = 'country_of_origin') -> pd.DataFrame:
+    """
+    Groups a Pandas DataFrame based on the sample_id and country_of_origin
+        the new dataframe has a new column number_of_tests
+        - this is the number of unique sample_ids
+        the other 2 numerical columns are means of previous values
+
+    Args:
+        df2 (pd.DataFrame): DataFrame of Pesticide data after 1st clean
+        col_groupby (str): Column to do 1st groupby
+
+    Raises:
+        ValueError: ??
+
+    Returns:
+        df2_grouped (pd.DataFrame): Pandas DataFrame grouped by id and country- note the mean is taken twice
+                                        1. When grouping by id
+                                        2. When grouping by col_groupby
+                                    the new dataframe has a new column number_of_tests
+                                        - this is the number of unique sample_ids
+                                    in addition to the previous numeric columns
+        df2_grouped_sample (pd.DataFrame): Pandas DataFrame grouped by id only
+    """
+    
+    
+    # group by id
+    df2_grouped_sample = df2.groupby(['sample_id','date_of_sampling', col_groupby],as_index=False).mean(numeric_only =True).sort_values('amount_detected', ascending=False)
+    
+    # group by col_groupby-> mean
+    df2_grouped = df2_grouped_sample.groupby(col_groupby,as_index=False).mean(numeric_only =True)
+    
+    # group by col_groupby-> count
+    df2_grouped_b = df2_grouped_sample.groupby(col_groupby, as_index=False).count().iloc[:,0:2]
+    
+    # merge the 2 new dfs and rename count column
+    df2_grouped= df2_grouped.merge(df2_grouped_b, left_on=col_groupby, right_on=col_groupby)
+    df2_grouped.rename(columns ={'sample_id':'number_of_tests'},inplace=True)
+    
+    # sort dataframe by counts
+    df2_grouped= df2_grouped.sort_values('number_of_tests', ascending=False)
+
+    # reset index
+    df2_grouped.reset_index(inplace=True, drop=True)
+    df2_grouped_sample.reset_index(inplace=True, drop=True)
+
+    return df2_grouped, df2_grouped_sample
