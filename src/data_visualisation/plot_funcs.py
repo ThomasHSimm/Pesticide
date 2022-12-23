@@ -1,6 +1,12 @@
 
 import seaborn as sns
 import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+column_names_dict={'amount_detected':  'Pesticide residues \nfound (mg/kg)' ,
+                    'mrl': 'Maximum reporting \nlimit MRL (mg/kg)', 
+                    'amount_pc' : 'Pesticide residues \nfraction of MRL'}
 
 def range_plots(df2: pd.DataFrame, 
                 plot_type: str ='boxplot', column_to_plot: str = 'amount_detected',                
@@ -49,8 +55,9 @@ def range_plots(df2: pd.DataFrame,
     
     elif plot_type=='hist':
         
-        n_cols = 3
-        n_rows = len(numeric_df.columns) // n_cols 
+        n_cols = 3 # columns in plot
+        
+        n_rows = (len(numeric_df.columns)-1) // n_cols  +1
 
         fig, ax = plt.subplots(nrows= n_rows, ncols= n_cols, sharex= False,
                                     figsize= (12, 6))
