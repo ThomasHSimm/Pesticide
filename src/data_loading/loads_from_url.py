@@ -2,6 +2,39 @@ import pandas as pd
 import ezodf
 import re
 
+def import_all_files_save(folder_path):
+    """
+    imports ods files from a directory = folder_path for each file 
+    uses import_ods to get a dataframe then joins them for one 
+    big data frame
+    
+    Args: the path to the data files
+    Returns: nothing but saves dataframe in file_path
+    
+    """
+    
+    file_path = []
+    for x in os.listdir(folder_path):
+        file_path.append(os.path.join(folder_path,x) )
+    
+    dict_column_names = {'Sampling Point':'Retail Outlet',
+                     'Packer / Manufacturer':'Packer / Manufacturer / Importer'}
+
+
+    for i,file in enumerate(file_path):
+        if re.search(r'.ods',file) and not re.search(r'__',file):
+            df_temp = import_ods(file)
+            df_temp = df_temp.rename(columns=dict_column_names)
+
+            if i>0:
+                df_combo = pd.concat([df_combo, df_temp])
+            else:
+                df_combo = df_temp
+        
+    file_out = os.path.join(folder_path,'combined_data.csv')    
+    df_combo.to_csv( file_out )
+    
+    
 def import_ods(fname):
     """
     imports ods files given a filename and returns a pd dataframe
