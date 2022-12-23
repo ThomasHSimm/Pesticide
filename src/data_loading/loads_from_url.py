@@ -1,6 +1,7 @@
 import pandas as pd
 import ezodf
 import re
+import os
 
 def import_all_files_save(folder_path):
     """
@@ -9,7 +10,7 @@ def import_all_files_save(folder_path):
     big data frame
     
     Args: the path to the data files
-    Returns: nothing but saves dataframe in file_path
+    Returns: dataframe of the combined file df_combo
     
     """
     
@@ -31,8 +32,7 @@ def import_all_files_save(folder_path):
             else:
                 df_combo = df_temp
         
-    file_out = os.path.join(folder_path,'combined_data.csv')    
-    df_combo.to_csv( file_out )
+    return df_combo
     
     
 def import_ods(fname):
