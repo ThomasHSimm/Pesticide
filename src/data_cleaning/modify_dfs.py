@@ -61,6 +61,9 @@ def modify_df(df):
         # delete the sampling point column
         df.drop('sampling_point', axis=1, inplace=True)         
     
+    # drop the pesticide_residues_found_in_mg/kg_(mrl) column
+    df.drop('pesticide_residues_found_in_mg/kg_(mrl)', axis=1, inplace=True)
+
     return df
      
 def extract_pcode(x):    
