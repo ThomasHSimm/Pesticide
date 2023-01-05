@@ -1,20 +1,20 @@
+from plotly import graph_objects as go
 import streamlit as st
 import pandas as pd
 
-from src.data_loading.loads_from_url import *
-from src.data_cleaning.modify_dfs import *
-from src.data_visualisation.plot_funcs import *
+import src.data_loading.loads_from_url as lfu
+import src.data_cleaning.modify_dfs as mdf
+import src.data_visualisation.plot_funcs as pfs
 
 import os
 from pandasql import sqldf
 cwd = os.getcwd()
 
-folder_path = os.path.join(cwd,'data')
+folder_path = os.path.join(cwd, 'data')
 # folder_path = 'C:\\Users\simmt\Code1\Pesticide\Pesticide-main\data_files'
 file_path = []
 for x in os.listdir(folder_path):
-    file_path.append(os.path.join(folder_path,x) )
-    
+    file_path.append(os.path.join(folder_path, x))
 
 
 st.title('Pesticides')
@@ -22,16 +22,17 @@ st.title('Pesticides')
 
 @st.cache()
 def load_data(ii):
-    
-    print(file_path[ii])
-    df = import_ods(file_path[ii])
 
-    df2 = modify_df(df)
+    print(file_path[ii])
+    df = lfu.import_ods(file_path[ii])
+
+    df2 = mdf.modify_df(df)
 
     return df2
 
+
 data_load_state = st.text('Loading data...')
-df2=load_data(2)
+df2 = load_data(2)
 data_load_state.text("Loaded data (using st.cache)")
 
 st.dataframe(df2.head())
@@ -40,27 +41,27 @@ st.dataframe(df2.head())
 products = df2['product'].unique()
 product = st.sidebar.selectbox(
     'Select product',
-     products)
+    products)
 
 # An optionbox- Select What to group by
 
 country_or_chem = st.sidebar.selectbox(
     'What to plot',
-     ['Country', 'Chemical'])
-if country_or_chem=='Country':
-    is_country=True
-    chems = list(df2['chem_name'].unique()) 
-    chems.insert(0,'all')
+    ['Country', 'Chemical'])
+if country_or_chem == 'Country':
+    is_country = True
+    chems = list(df2['chem_name'].unique())
+    chems.insert(0, 'all')
     chemical_country = st.sidebar.selectbox(
         'Which chemical?', chems
-        )
+    )
 else:
-    is_country=False
-    countrys = list(df2['country_of_origin'].unique()) 
-    countrys.insert(0,'all')
+    is_country = False
+    countrys = list(df2['country_of_origin'].unique())
+    countrys.insert(0, 'all')
     chemical_country = st.sidebar.selectbox(
         'Which country?', countrys
-        )
+    )
 
 # product = 'Wine'
 date_low = '2010-06-01'
@@ -84,5 +85,6 @@ GROUP BY
 data_sql
 
 
-fig = plot_pie_by_chem(data_sql, chemical_country=chemical_country, what_to_plot='sum_detected',is_country=is_country, product=product)
+fig = pfs.plot_pie_by_chem(data_sql, chemical_country=chemical_country,
+                           what_to_plot='sum_detected', is_country=is_country, product=product)
 st.pyplot(fig)
