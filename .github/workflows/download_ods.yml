@@ -1,0 +1,28 @@
+# Downloads from ONS Pesticide library
+# https://docs.github.com/en/actions/using-workflows/about-workflows
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+# https://github.com/orgs/community/discussions/26539
+name: download_ods
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+# https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
+on: 
+  schedule:
+  # minute hour day_of_month month_of_year day_of_week
+  # aim is every month on the 7th at 04:17 see https://crontab.guru/#17_4_7_*_*
+    - cron:  '17 4 7 * *'
+
+jobs:
+  job1: #job id
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8 #install the python needed
+      - name: execute py script # run the run.py to get the latest data
+        run: |
+          python test_downloader.py
+  
