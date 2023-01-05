@@ -1,6 +1,10 @@
 import pandas as pd
 import ezodf
 import re
+import streamlit as st
+import os
+
+import src.data_cleaning.modify_dfs as md
 
 def import_ods(fname):
     """
@@ -84,3 +88,49 @@ def import_ods_inner(sheet):
         return ddf,True
     else:
         return [],False
+
+@st.cache()
+def load_data(ii, folder_path):
+
+    file_path = []
+    for file_ in os.listdir(folder_path):
+        file_path.append(os.path.join(folder_path, file_) )
+    
+    print(file_path[ii])
+    df = import_ods(file_path[ii])
+
+    df2 = md.modify_df(df)
+
+    return df2
+
+# create a function to import all ods files and return a df
+def import_all_ods(folder_path):
+    """
+    Imports all ods files in a folder and returns a pd df
+    
+    Args:
+        folder_path (string): a string to location of the ods file
+    
+    Returns:
+        a dataframe of the ods file
+    """
+    file_path = []
+    for file_ in os.listdir(folder_path):
+        if file_.endswith('.ods'):
+            file_path.append(os.path.join(folder_path, file_) )
+    
+    mod_dfs = []
+    for file_ in file_path:
+        print(f"Importing {file_}")
+        df = import_ods(file_)
+        
+        # put each modified df into a list
+        mod_dfs.append(df)
+
+    # concat all the modified dfs   
+    df_all = pd.concat(mod_dfs)
+
+    # modify the concatenated dfs
+    df_all = md.modify_df(df_all)
+
+    return df_all
