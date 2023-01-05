@@ -7,11 +7,11 @@ name: download_ods
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
 # https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#schedule
-on: 
-  schedule:
+on: push
+  #schedule:
   # minute hour day_of_month month_of_year day_of_week
   # aim is every month on the 7th at 04:17 see https://crontab.guru/#17_4_7_*_*
-    - cron:  '17 4 7 * *'
+  #  - cron:  '17 4 7 * *'
 
 jobs:
   job1: #job id
