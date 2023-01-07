@@ -3,7 +3,15 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 def plot_pie_by_chem(data_sql, chemical_country='boscalid', what_to_plot='sum_detected',is_country=True,product='all'):
+    """
 
+    Args:  
+        data_sql (pd df): data to plot
+        chemical_country (str): chemical or country to plot
+        what_to_plot (str): what to plot
+        is_country (bool): if True plot by country, else plot by chemical
+        product (str): product to plot
+    """
     if is_country:
         label_plot ='country_of_origin'
         title_str = product + '. ' + what_to_plot + ' by chemical = ' + chemical_country
