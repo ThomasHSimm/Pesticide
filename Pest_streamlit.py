@@ -59,7 +59,7 @@ SELECT
     chem_name,	SUM(amount_detected) AS sum_detected, 
     country_of_origin, COUNT(*) as count_tests
 FROM 
-    df2
+    all_dfs
 WHERE 
     product =  '{product}' AND
     date_of_sampling > '{date_low}' AND
