@@ -112,25 +112,26 @@ def import_all_ods(folder_path):
         folder_path (string): a string to location of the ods file
     
     Returns:
-        a dataframe of the ods file
+        pd.Dataframe (mod_df): a dataframe of all ods files combined,
+            with modifcations applied
     """
     file_path = []
     for file_ in os.listdir(folder_path):
         if file_.endswith('.ods'):
             file_path.append(os.path.join(folder_path, file_) )
     
-    mod_dfs = []
+    all_df_lst = []
     for file_ in file_path:
         print(f"Importing {file_}")
         df = import_ods(file_)
         
         # put each modified df into a list
-        mod_dfs.append(df)
+        all_df_lst.append(df)
 
     # concat all the modified dfs   
-    df_all = pd.concat(mod_dfs)
+    df_all = pd.concat(all_df_lst)
 
     # modify the concatenated dfs
-    df_all = md.modify_df(df_all)
+    mod_df = md.modify_df(df_all)
 
-    return df_all
+    return mod_df
