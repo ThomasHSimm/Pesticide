@@ -51,27 +51,40 @@ else:
         'Which country?', countrys
         )
 
-# product = 'Wine'
-date_low = '2010-06-01'
-date_high = '2027-06-01'
-data_sql = sqldf(f"""
-SELECT 
-    chem_name,	SUM(amount_detected) AS sum_detected, 
-    country_of_origin, COUNT(*) as count_tests
-FROM 
-    all_dfs
-WHERE 
-    product =  '{product}' AND
-    date_of_sampling > '{date_low}' AND
-    date_of_sampling < '{date_high}' 
+# product = 'Apple'
+# date_low = '2010-06-01'
+# date_high = '2027-06-01'
+# data_sql = sqldf(f"""
+# SELECT 
+#     chem_name,	SUM(amount_detected) AS sum_detected, 
+#     country_of_origin, COUNT(*) as count_tests
+# FROM 
+#     all_dfs
     
-GROUP BY
-    country_of_origin, chem_name
-""", locals()
-)
+# GROUP BY
+#     country_of_origin, chem_name
+# """, locals()
+# )
 
-data_sql
+query = "SELECT \
+             sample_id, \
+            date_of_sampling, \
+            description, \
+            country_of_origin, \
+            retail_outlet, \
+            address, \
+            brand_name,  \
+            chem_name,  \
+            amount_detected,  \
+            mrl \
+            FROM all_dfs "
+
+st.dataframe(all_dfs.head())
 
 
-fig = plot_pie_by_chem(data_sql, chemical_country=chemical_country, what_to_plot='sum_detected',is_country=is_country, product=product)
+fig = plot_pie_by_chem(all_dfs,
+                       chemical_country=chemical_country,
+                       what_to_plot='amount_detected',
+                       is_country=is_country,
+                       product=product)
 st.pyplot(fig)
