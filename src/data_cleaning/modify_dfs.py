@@ -46,12 +46,31 @@ def modify_df(df):
     
     df['amount_detected'] = df['amount_detected'].astype('float64')
     df['mrl'] = df['mrl'].astype('float64')
-    
+
+
     # add a new column
     df['amount_pc']=df['amount_detected']/df['mrl']
 
     df.loc[df['amount_pc'].isna(),['amount_pc']]=0
+    
+    # The sampling point column seems to be the same as the retail outlet column
+    # if the sampling point column is empty the retail outlet column is not
+    # both are a string of the retail outlet name
+    
+    # Move the data from the sampling_point column to retail outlet if applicable
+    if 'sampling_point' in df.columns:
+        df['retail_outlet'] = (
+            df['retail_outlet']
+            .apply(lambda x: x 
+            if not pd.isna(x)
+            else df['sampling_point']))
+        # delete the sampling point column
+        df.drop('sampling_point', axis=1, inplace=True)         
+    
+    # drop the pesticide_residues_found_in_mg/kg_(mrl) column
+    df.drop('pesticide_residues_found_in_mg/kg_(mrl)', axis=1, inplace=True)
                        
+
     return df
 
      
