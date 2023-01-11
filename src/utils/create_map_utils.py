@@ -37,6 +37,7 @@ wales_region_dict={
      'Torfaen':'South East Wales', 
      'Monmouthshire':'South East Wales',    
      'Blaenau Gwent':'South East Wales',
+     
     }
     
 def load_kml(url_data):
