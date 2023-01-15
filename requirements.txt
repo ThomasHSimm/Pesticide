@@ -1,3 +1,5 @@
+ezodf
+lxml
 matplotlib
 numpy
 pandas
