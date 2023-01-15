@@ -41,7 +41,7 @@ Information about the data from the [source site](https://www.data.gov.uk/datase
     - maybe more refined display based on criteria of data?
   - add count part to plots
 
-https://thomashsimm-pesticide-pest-streamlit-udsgv3.streamlit.app/
+https://thomashsimm-pesticide-pest-streamlit-ku7yyt.streamlit.app/
 
 ## Acknowledgement
 
