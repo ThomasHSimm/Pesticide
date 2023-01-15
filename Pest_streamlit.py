@@ -1,4 +1,3 @@
-from plotly import graph_objects as go
 import streamlit as st
 import pandas as pd
 
@@ -11,10 +10,6 @@ from pandasql import sqldf
 cwd = os.getcwd()
 
 folder_path = os.path.join(cwd, 'data')
-# folder_path = 'C:\\Users\simmt\Code1\Pesticide\Pesticide-main\data_files'
-
-
-    
 
 
 
@@ -23,9 +18,13 @@ st.title('Pesticides')
 
 
 data_load_state = st.text('Loading data...')
-# df2 = load_data(2, folder_path)
-all_dfs = import_all_ods(folder_path)
 
+@st.cache
+def load_dfs():
+    all_dfs = pd.read_csv('./data/combined_df.csv')
+    return all_dfs
+
+all_dfs = load_dfs()
 data_load_state.text("Loaded data (using st.cache)")
 
 st.dataframe(all_dfs.head())
@@ -37,11 +36,10 @@ product = st.sidebar.selectbox(
     products)
 
 # An optionbox- Select What to group by
-
 country_or_chem = st.sidebar.selectbox(
     'What to plot',
-
      ['Country', 'Chemical'])
+
 if country_or_chem=='Country':
     is_country=True
     chems = list(all_dfs['chem_name'].unique()) 
@@ -68,7 +66,7 @@ SELECT
     chem_name,	SUM(amount_detected) AS sum_detected, 
     country_of_origin, COUNT(*) as count_tests
 FROM 
-    df2
+    all_dfs
 WHERE 
     product =  '{product}' AND
     date_of_sampling > '{date_low}' AND
