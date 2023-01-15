@@ -145,5 +145,21 @@ def _import_ods_inner(sheet):
     else:
         return [],False
 
+    return mod_df
 
+
+def get_poscode_df(path_to_csv= ".//src//utils//map_data//postcode_to_region.csv",
+                    usecols=['Postcode','mapArea']):
+    """
+    loads poscode data and returns that as a dataframe
+    
+    Args:   path_to_csv (path) csv file of postcode data
+            usecols (list[str]) what columns to load, also includes latitude,longitude
+    Returns: 
+        postcodes_df (pd.DataFrame) pandas dataframe of the postcode data
+    
+    """
+    postcodes_df = pd.read_csv(path_to_csv,
+                                usecols=usecols)
+    return postcodes_df
 
