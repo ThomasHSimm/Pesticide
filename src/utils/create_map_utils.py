@@ -40,16 +40,33 @@ wales_region_dict={
      
     }
     
-def main():
+    
+def main(save_dir='./map_data'):
     """
-    Creates:
-        - A pandas dataframe with values for each postcode and an area-name to plot to
-        - Create a json file with area-name and associated polygons
-    These are then saved to files
+    Creates files:
+    - json file of UK areas and polygons
+    - a postcode mapper dataframe to convert postcode to area for plotting
+    These are saved locally
+    
     """    
     
+    # the kml polygon files to use to convert to json
+    url_data_paths = ['https://www.doogal.co.uk/kml/counties/Counties.kml',
+                  '.\\_data\\scotland_preg_2011.KML',
+                  '.\\_data\\WalesDistrict.kml',
+                  'https://www.doogal.co.uk/kml/UkPostcodes.kml']
+                  
+    country=['England', 'Scotland', 'Wales', 'Northern Ireland']
+    save_dir
+    # below the data above is used to create a json file and saved locally
+    url_KML_map(url_data_paths, 'combined_json', 
+                doScotWales=country,
+                save_dir = save_dir)
+
+    # a mapper dataframe of postcode -> area is created anf then saved
+    postcode_df = load_pcode_csvs()
     
-    
+    postcode_df.to_csv(os.path.join(save_dir,"postcode_to_region.csv"))
     
     
 def load_kml(url_data):
@@ -94,7 +111,9 @@ def gdf_create_json(gdf, loc_save='./_data', fname='region.json'):
 
 
 
-def url_KML_map(url_data_paths, json_fname, doScotWales=[False]):
+def url_KML_map(url_data_paths, json_fname, 
+                doScotWales=[False],
+                save_dir='./map_data'):
     """
     The main function used to take a KML file and plot it 
         Calls kml_create_json to create json file
@@ -123,21 +142,8 @@ def url_KML_map(url_data_paths, json_fname, doScotWales=[False]):
     
     # create a json file for plotting and gives back names of regions
     fname= json_fname +'.json'
-    map_names, json_path = gdf_create_json(gdfAll, loc_save='./_data', fname=fname)
+    map_names, json_path = gdf_create_json(gdfAll, loc_save=save_dir, fname=fname)
 
-    
-    # create a datafrme to check it all works
-    df = pd.DataFrame(columns=['County','Data'])
-      
-    # add the names of the regions
-    df['County'] = map_names
-    # create some random data to plot
-    df['Data']= np.random.randint(0 ,100,len(df) )
-
-    m = plot_map(df,what_to_plot='Data',region_to_plot='County',
-                json_path = json_path)
-    
-    return m, df
 
 def _split_islands(df):
     """
@@ -285,3 +291,4 @@ def _postcodeDF_additionalProcessing(postcode_df):
     postcode_df = postcode_df[cols_to_use]
     
     return postcode_df
+
