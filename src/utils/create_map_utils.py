@@ -1,3 +1,9 @@
+"""
+ N.B. to run main postcode data needs to be downloaded
+ the files are too big for GitHub
+ see website 
+"""
+
 import os
 # geometry data
 import fiona
@@ -13,6 +19,8 @@ import os
 # plot map parts
 import folium
 import branca.colormap as cm
+
+
 
 wales_region_dict={ 
      'Wrexham':'North Wales', 
@@ -40,16 +48,35 @@ wales_region_dict={
      
     }
     
-def main():
+   
+
+def main(save_dir='.\\src\\utils\\map_data'):
     """
-    Creates:
-        - A pandas dataframe with values for each postcode and an area-name to plot to
-        - Create a json file with area-name and associated polygons
-    These are then saved to files
+    Creates files:
+    - json file of UK areas and polygons
+    - a postcode mapper dataframe to convert postcode to area for plotting
+    These are saved locally
+    N.B. to run main postcode data needs to be downloaded
+    
     """    
     
+    # the kml polygon files to use to convert to json
+    url_data_paths = ['https://www.doogal.co.uk/kml/counties/Counties.kml',
+                  '.\\src\\utils\\map_data\\scotland_preg_2011.KML',
+                  '.\\src\\utils\\map_data\\WalesDistrict.kml',
+                  'https://www.doogal.co.uk/kml/UkPostcodes.kml']
+                  
+    country=['England', 'Scotland', 'Wales', 'Northern Ireland']
     
+    # below the data above is used to create a json file and saved locally
+    url_KML_map(url_data_paths, 'combined_json', 
+                doScotWales=country,
+                save_dir = save_dir)
+
+    # a mapper dataframe of postcode -> area is created anf then saved
+    postcode_df = load_pcode_csvs()
     
+    postcode_df.to_csv(os.path.join(save_dir,"postcode_to_region.csv"))
     
     
 def load_kml(url_data):
@@ -94,7 +121,9 @@ def gdf_create_json(gdf, loc_save='./_data', fname='region.json'):
 
 
 
-def url_KML_map(url_data_paths, json_fname, doScotWales=[False]):
+def url_KML_map(url_data_paths, json_fname, 
+                doScotWales=[False],
+                save_dir='./map_data'):
     """
     The main function used to take a KML file and plot it 
         Calls kml_create_json to create json file
@@ -123,21 +152,8 @@ def url_KML_map(url_data_paths, json_fname, doScotWales=[False]):
     
     # create a json file for plotting and gives back names of regions
     fname= json_fname +'.json'
-    map_names, json_path = gdf_create_json(gdfAll, loc_save='./_data', fname=fname)
+    map_names, json_path = gdf_create_json(gdfAll, loc_save=save_dir, fname=fname)
 
-    
-    # create a datafrme to check it all works
-    df = pd.DataFrame(columns=['County','Data'])
-      
-    # add the names of the regions
-    df['County'] = map_names
-    # create some random data to plot
-    df['Data']= np.random.randint(0 ,100,len(df) )
-
-    m = plot_map(df,what_to_plot='Data',region_to_plot='County',
-                json_path = json_path)
-    
-    return m, df
 
 def _split_islands(df):
     """
@@ -218,13 +234,13 @@ def load_pcode_csvs():
     """
 
     import re
-
-    file_paths=[".\\_data\\England1 postcodes.csv",
-                ".\\_data\\England2 postcodes.csv",
-                ".\\_data\\Wales postcodes.csv",
-                ".\\_data\\NRScotland-SmallUser.csv", #has column for maps
+    
+    file_paths=[".\\src\\utils\\map_data\\England1 postcodes.csv",
+                ".\\src\\utils\\map_data\\England2 postcodes.csv",
+                ".\\src\\utils\\map_data\\Wales postcodes.csv",
+                ".\\src\\utils\\map_data\\NRScotland-SmallUser.csv", #has column for maps
     #             ".\\_data\\Scotland postcodes.csv",
-                ".\\_data\\BT postcodes.csv",]
+                ".\\src\\utils\\map_data\\BT postcodes.csv",]
 
     postcode_df = pd.DataFrame()
     for file in file_paths:
@@ -285,3 +301,7 @@ def _postcodeDF_additionalProcessing(postcode_df):
     postcode_df = postcode_df[cols_to_use]
     
     return postcode_df
+
+
+if __name__ == '__main__':
+    main() 
