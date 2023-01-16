@@ -9,7 +9,7 @@ Much of the quarterly and annual data is available in this repo's [data folder](
 
 Information about the data from the [source site](https://www.data.gov.uk/dataset/5d5028ef-9918-4ab7-8755-81f3ad06f308/pesticide-residues-in-food): 
 
-The website of this is found at [PesticideDocs](thomashsimm.github.io/PesticideDocs)
+The website of this is found at [PesticideDocs](https://thomashsimm.github.io/PesticideDocs/)
 
 > The data set shows pesticide residues in different foods types, presented in 2 different table formats. The BNA format focusses on details of individual samples  including brand name and origin and shows the pesticides detected if any. The SUM format focuses on the analysis and results across the set of samples, including detail of all the pesticides sought but not found.
 
