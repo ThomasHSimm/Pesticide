@@ -8,7 +8,7 @@ import copy
 
 def plot_map(df, 
              what_to_plot='amount_pc',region_to_plot='Name',
-             json_path='./_data/region.json',
+             json_path='.src/utils/map_data/combined_json.json',
              longitude=-3.1, latitude=54.1):
     """
     loads a KML location file (from local file or url) 

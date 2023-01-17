@@ -1,6 +1,8 @@
 import pandas as pd
 import re
 
+import src.data_loading.loads_from_url as lfu
+
 def modify_df(df):
     """ Makes modifications to a pesticide dataframe
     Calls extract_pcode, extract_pesticide, rename_cols to extract information from df and rename cols
@@ -20,15 +22,12 @@ def modify_df(df):
     
     # get postcodes
     df['address_postcode']=df['address'].apply(extract_pcode)
-    
-    try:
-        df['packer__postcode']=df['packer_/_manufacturer_/_importer'].apply(extract_pcode)
-    except:
-        pass
-    try:
-        df['packer__postcode']=df['packer_/_manufacturer'].apply(extract_pcode)
-    except:
-        pass
+    df['packer_postcode']=df['packer_/_manufacturer_/_importer'].apply(extract_pcode)
+
+    # get area
+    postcode_columns = ['address_postcode', 'packer_postcode']
+    for column in postcode_columns:
+        df = get_map_area(df, column, area_column = re.sub(r"postcode",'area',column))
                        
     # get pesticide residue    
     df2 = extract_pesticide(df)
@@ -73,6 +72,16 @@ def modify_df(df):
 
     return df
 
+def get_map_area(df, postcode_column, area_column = 'area_to_plot'):
+
+    postcodes_df = lfu.get_postcode_df(path_to_csv= ".//src//utils//map_data//postcode_to_region_new.csv",
+                    usecols=['Postcode','mapArea'])
+    
+    postcode_dict = dict(postcodes_df.values)
+    
+    df[area_column] = df.loc[:,postcode_column].map(postcode_dict)
+
+    return df
      
 def extract_pcode(x):    
     regexp = r'([A-Za-z]+[0-9]+\s[0-9]+[A-Za-z]+$)'

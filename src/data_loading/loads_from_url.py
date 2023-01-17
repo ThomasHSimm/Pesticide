@@ -6,11 +6,7 @@ import streamlit as st
 import os
 
 import src.data_cleaning.modify_dfs as md
-   
-def save_dfs(folder_path='/data/' , file_folder='/data/combined_df.csv'):
-
-    dfBIG = import_all_ods(folder_path)
-    dfBIG.to_csv(file_folder)
+    
 
 # create a function to import all ods files and return a df
 def import_all_ods(folder_path):
@@ -148,7 +144,7 @@ def _import_ods_inner(sheet):
     return mod_df
 
 
-def get_poscode_df(path_to_csv= ".//src//utils//map_data//postcode_to_region.csv",
+def get_postcode_df(path_to_csv= ".//src//utils//map_data//postcode_to_region.csv",
                     usecols=['Postcode','mapArea']):
     """
     loads poscode data and returns that as a dataframe
