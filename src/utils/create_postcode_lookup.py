@@ -11,7 +11,7 @@ import src.data_cleaning.modify_dfs as md
 
 import src.utils.map_utils as mpu
 import src.data_loading.loads_from_url as lfu
-from src.data_loading.loads_from_url import get_poscode_df
+from src.data_loading.loads_from_url import get_postcode_df
 
 def main(data_file = './data/combined_df.csv'):
     """
@@ -23,12 +23,12 @@ def main(data_file = './data/combined_df.csv'):
     df = pd.read_csv(data_file,index_col=0)
 
     # load postcode mapper
-    postcode_df = get_poscode_df(path_to_csv= ".//src//utils//map_data//postcode_to_region.csv",
+    postcode_df = get_postcode_df(path_to_csv= ".//src//utils//map_data//postcode_to_region.csv",
                     usecols=['Postcode','mapArea'])
     
     # get a list of postcode data with characters removed
-    # i.e. shorter_pc_list[0] = get_poscode_df()
-    #      shorter_pc_list[0] = get_poscode_df( for postcode reduced by one char)
+    # i.e. shorter_pc_list[0] = get_postcode_df()
+    #      shorter_pc_list[0] = get_postcode_df( for postcode reduced by one char)
     shorter_pc_list = get_postcode_list(postcode_df,usecols=['Postcode','mapArea'],
                     reduce_p_max=4)
 
@@ -49,7 +49,7 @@ def get_postcode_list(postcodes_df, usecols=['Postcode','mapArea'],
                     reduce_p_max=4
                     ):
     """
-    loads poscode data and returns that as a list of dataframes
+    loads postcode data and returns that as a list of dataframes
     where postcode has has been reduced by 1:reduce_p_max-1 in length
     
     Args:   path_to_csv (path) csv file of postcode data
