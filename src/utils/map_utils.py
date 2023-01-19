@@ -1,39 +1,40 @@
-# plot map parts
 import folium
-import branca.colormap as cms
-import pandas as pd
-import copy
 
 
-
-def plot_map(df, 
-             what_to_plot='amount_pc',region_to_plot='Name',
-             json_path='.src/utils/map_data/combined_json.json',
-             longitude=-3.1, latitude=54.1):
+def plot_map(
+    df,
+    what_to_plot="amount_pc",
+    region_to_plot="Name",
+    json_path=".src/utils/map_data/combined_json.json",
+    longitude=-3.1,
+    latitude=54.1,
+):
     """
-    loads a KML location file (from local file or url) 
+    loads a KML location file (from local file or url)
     and then saves this as a json file locally
-    
+
     Args: df (pandas dataframe) dataframe with location (region_to_plot) related to json file
                 in one column and data to plot (what_to_plot) in another
           what_to_plot/region_to_plot (string) columns in df
           json_path (file path) the path to the json file
           longitude/latitude (float) for the centre of the map
-    Returns: 
+    Returns:
         The folium map
-    
+
     """
     # create a basic map
     # This sets the basic look of the map
     # things like the zoom, color scheme, where the map is centred etc
 
-    m = folium.Map(location=[latitude,longitude], 
-                   zoom_start=5,
-                   control_scale=True,
-                   tiles="Stamen Toner")
-    
-    folium.TileLayer('CartoDB positron',name="Light Map",control=False).add_to(m)
-    
+    m = folium.Map(
+        location=[latitude, longitude],
+        zoom_start=5,
+        control_scale=True,
+        tiles="Stamen Toner",
+    )
+
+    folium.TileLayer("CartoDB positron", name="Light Map", control=False).add_to(m)
+
     """
     Create the Choropleth part:
 
@@ -49,18 +50,15 @@ def plot_map(df,
 
     choropleth = folium.Choropleth(
         geo_data=json_path,
-        name='choropleth',
-        legend_name= what_to_plot,
-        data= df,
-        columns=[region_to_plot,what_to_plot],
-        key_on= "feature.properties.Name",
-        fill_color='YlGn',
+        name="choropleth",
+        legend_name=what_to_plot,
+        data=df,
+        columns=[region_to_plot, what_to_plot],
+        key_on="feature.properties.Name",
+        fill_color="YlGn",
     ).add_to(m)
-    
-    # adds ability to see names of regions on mouseove
-    choropleth.geojson.add_child(
-    folium.features.GeoJsonTooltip(['Name'],labels=False)
-    )
-    
-    return m
 
+    # adds ability to see names of regions on mouseove
+    choropleth.geojson.add_child(folium.features.GeoJsonTooltip(["Name"], labels=False))
+
+    return m
