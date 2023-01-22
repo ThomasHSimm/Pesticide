@@ -32,8 +32,8 @@ def import_all_ods(folder_path):
 
     all_df_lst = []
     for file_ in file_path:
-        fname_ = file_.split("\\")[-1].split(".")[0]
-        print(f"Importing {fname_}")
+        
+        print(f"Importing {file_}")
         df = import_ods(file_)
         df = df.rename(columns=dict_column_names)
 
